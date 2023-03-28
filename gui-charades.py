@@ -18,7 +18,14 @@ items = movies + songs + tv_shows
 
 last_item = None
 
-while True:
+# Create a GUI window and display the chosen item and its category
+window = tk.Tk()
+window.title('Random Item Generator')
+
+label1 = tk.Label(window, font=('Arial', 20))
+label1.pack(pady=5)
+
+def generate_item():
     # Randomly choose an item from the master list that is not the same as the last item
     chosen_item = random.choice([item for item in items if item != last_item])
 
@@ -30,31 +37,30 @@ while True:
     else:
         category = 'TV Show'
 
-    # Create a GUI window and display the chosen item and its category
-    window = tk.Tk()
-    window.title('Random Item Generator')
+    # Update label with new chosen item and its category
+    label1.config(text=f'{category}: {chosen_item}')
 
-    label1 = tk.Label(window, text=f'{category}: {chosen_item}', font=('Arial', 20))
-    label1.pack(pady=5)
+# Add buttons to prompt user for another item or to close the program
+button1 = tk.Button(window, text='Generate Another Item', font=('Arial', 15), command=generate_item)
+button1.pack(side='left', padx=50)
 
-    # Add buttons to prompt user for another item or to close the program
-    button1 = tk.Button(window, text='Generate Another Item', font=('Arial', 15), command=window.destroy)
-    button1.pack(side='left', padx=50)
+button2 = tk.Button(window, text='Exit Program', font=('Arial', 15), command=exit)
+button2.pack(side='right', padx=50)
 
-    button2 = tk.Button(window, text='Exit Program', font=('Arial', 15), command=exit)
-    button2.pack(side='right', padx=50)
+# Set minimum size of window to be large enough to display all items
+window.update_idletasks()
+window.geometry(f'{max(800, label1.winfo_width() + 100)}x{max(200, label1.winfo_height() + 30)}')
 
-    # Set minimum size of window to be large enough to display all items
-    window.update_idletasks()
-    window.geometry(f'{max(800, label1.winfo_width() + 100)}x{max(200, label1.winfo_height() + 30)}')
+# Make sure "x" button closes the window properly
+window.protocol("WM_DELETE_WINDOW", exit)
 
-    # Make sure "x" button closes the window properly
-    window.protocol("WM_DELETE_WINDOW", exit)
+# Set position of window to center of screen
+window.eval('tk::PlaceWindow %s center' % window.winfo_toplevel())
 
-    # Set position of window to center of screen
-    window.eval('tk::PlaceWindow %s center' % window.winfo_toplevel())
+# Keep window always on top
+window.wm_attributes("-topmost", True)
 
-    # Keep window always on top
-    window.wm_attributes("-topmost", True)
+# Generate initial item
+generate_item()
 
-    window.mainloop()
+window.mainloop()
